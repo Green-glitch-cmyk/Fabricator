@@ -132,10 +132,15 @@ namespace Fabricator {
                 PrintBanner();
                 break;
             case CommandType::Help:
-                std::cout << "Available commands: help, clear, exit, info, network" << std::endl;
+                std::cout << "Available commands: help, clear, exit, info, network, games" << std::endl;
                 break;
             case CommandType::SystemInfo:
-                std::cout << "Fabricator ver. 1.0.0f201" << std::endl;
+                pImpl->logger->SetColor(ConsoleColor::BrightGreen);
+                std::cout << "[Fabricator Toolkit]" << std::endl;
+                pImpl->logger->SetColor(ConsoleColor::Magenta);
+                std::cout << "Version";
+                pImpl->logger->ResetColor();
+                std::cout << " 1.0.0f263" << std::endl;
                 std::cout << "Components: " << pImpl->components.size() << " loaded" << std::endl;
                 break;
             case CommandType::NetworkStatus:
@@ -186,15 +191,63 @@ namespace Fabricator {
 
     void Logger::SetColor(ConsoleColor color) const {
         HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
+        // Цифры для Windows Console
         switch (color) {
-        case ConsoleColor::Green: SetConsoleTextAttribute(hConsole, 10); break;
-        case ConsoleColor::Yellow: SetConsoleTextAttribute(hConsole, 14); break;
-        case ConsoleColor::Red: SetConsoleTextAttribute(hConsole, 12); break;
-        case ConsoleColor::Blue: SetConsoleTextAttribute(hConsole, 9); break;
-        case ConsoleColor::Cyan: SetConsoleTextAttribute(hConsole, 11); break;
-        case ConsoleColor::White: SetConsoleTextAttribute(hConsole, 15); break;
-        default: SetConsoleTextAttribute(hConsole, 7); break;
+            // Обычные
+        case ConsoleColor::Black:        SetConsoleTextAttribute(hConsole, 0); break;
+        case ConsoleColor::White:        SetConsoleTextAttribute(hConsole, 7); break;
+        case ConsoleColor::Green:        SetConsoleTextAttribute(hConsole, 10); break;
+        case ConsoleColor::Yellow:       SetConsoleTextAttribute(hConsole, 14); break;
+        case ConsoleColor::Red:          SetConsoleTextAttribute(hConsole, 12); break;
+        case ConsoleColor::Blue:         SetConsoleTextAttribute(hConsole, 9); break;
+        case ConsoleColor::Cyan:         SetConsoleTextAttribute(hConsole, 11); break;
+        case ConsoleColor::Magenta:      SetConsoleTextAttribute(hConsole, 13); break;
+
+            // Яркие
+        case ConsoleColor::BrightGreen:  SetConsoleTextAttribute(hConsole, 10 | FOREGROUND_INTENSITY); break;
+        case ConsoleColor::BrightYellow: SetConsoleTextAttribute(hConsole, 14 | FOREGROUND_INTENSITY); break;
+        case ConsoleColor::BrightRed:    SetConsoleTextAttribute(hConsole, 12 | FOREGROUND_INTENSITY); break;
+        case ConsoleColor::BrightBlue:   SetConsoleTextAttribute(hConsole, 9 | FOREGROUND_INTENSITY); break;
+        case ConsoleColor::BrightCyan:   SetConsoleTextAttribute(hConsole, 11 | FOREGROUND_INTENSITY); break;
+        case ConsoleColor::BrightMagenta:SetConsoleTextAttribute(hConsole, 13 | FOREGROUND_INTENSITY); break;
+
+            // Фоновые
+        case ConsoleColor::BgBlack:      SetConsoleTextAttribute(hConsole, BACKGROUND_INTENSITY); break;
+        case ConsoleColor::BgWhite:      SetConsoleTextAttribute(hConsole, BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE); break;
+        case ConsoleColor::BgRed:        SetConsoleTextAttribute(hConsole, BACKGROUND_RED); break;
+        case ConsoleColor::BgGreen:      SetConsoleTextAttribute(hConsole, BACKGROUND_GREEN); break;
+        case ConsoleColor::BgBlue:       SetConsoleTextAttribute(hConsole, BACKGROUND_BLUE); break;
+
+        default:                         SetConsoleTextAttribute(hConsole, 7); break;
         }
+    }
+
+    // Новый метод в классе Logger
+    void Logger::RainbowText(const std::string& text) {
+        ConsoleColor colors[] = {
+            ConsoleColor::Red,
+            ConsoleColor::BrightRed,
+            ConsoleColor::Yellow,
+            ConsoleColor::BrightYellow,
+            ConsoleColor::Green,
+            ConsoleColor::BrightGreen,
+            ConsoleColor::Cyan,
+            ConsoleColor::BrightCyan,
+            ConsoleColor::Blue,
+            ConsoleColor::BrightBlue,
+            ConsoleColor::Magenta,
+            ConsoleColor::BrightMagenta
+        };
+
+        int colorCount = sizeof(colors) / sizeof(colors[0]);
+
+        for (size_t i = 0; i < text.length(); i++) {
+            SetColor(colors[i % colorCount]);
+            std::cout << text[i];
+        }
+        ResetColor();
+        std::cout << std::endl;
     }
 
     void Logger::ResetColor() const {

@@ -43,14 +43,35 @@ namespace Fabricator {
     };
 
     // Цветовые коды (для эмуляции)
+    // Добавляем больше цветов
     enum class ConsoleColor {
+        // Основные
         Default,
+        Black,
+        White,
+
+        // Стандартные
         Green,
         Yellow,
         Red,
         Blue,
         Cyan,
-        White
+        Magenta,      // новый
+
+        // Яркие варианты
+        BrightGreen,   // новый
+        BrightYellow,  // новый
+        BrightRed,     // новый
+        BrightBlue,    // новый
+        BrightCyan,    // новый
+        BrightMagenta, // новый
+
+        // Фоновые (для особых случаев)
+        BgBlack,       // новый
+        BgWhite,       // новый
+        BgRed,         // новый
+        BgGreen,       // новый
+        BgBlue         // новый
     };
 }
 

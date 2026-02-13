@@ -66,6 +66,7 @@ namespace Fabricator {
         void Log(const std::string& message, LogLevel level = LogLevel::Info);
         void SetColor(ConsoleColor color) const;
         void ResetColor() const;
+        void RainbowText(const std::string& text);
     };
 
     // Сетевой менеджер
